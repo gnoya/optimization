@@ -1,0 +1,12 @@
+{
+  "dimension": 4,
+  "x": 1000,
+  "y": 1000,
+  "z": 1000,
+  "m": 1000,
+  "p": 1000,
+  "alpha": 10,
+  "beta": 1,
+  "lower_bound": 0,
+  "upper_bound": 2500
+}

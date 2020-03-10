@@ -1,0 +1,9 @@
+{
+  "number_particles": 500,
+  "c1": 1,
+  "c2": 1,
+  "w_min": 0.2,
+  "w_max": 0.9,
+  "iterations": 5000,
+  "max_velocity": 10
+}

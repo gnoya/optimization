@@ -24,11 +24,11 @@ class Objective():
         y = y - parameters[1]
         x = x - 2 * parameters[1]
 
-        # Olla
+        # Pot
         x = x - 3 * parameters[2]
         z = z - 2 * parameters[2]
 
-        # Sarten
+        # Pan
         x = x - 2 * parameters[3]
         z = z - parameters[3]
         m = m - parameters[3]
@@ -50,16 +50,13 @@ class Objective():
 
     def print_values(self, parameters):
         objective, sales, x, y, z, m = self.calculate(parameters)
-        print('\nValor: {}'.format(objective))
+        print('\nValue: {}'.format(objective))
         print('Sales: {}'.format(sales))
         print('x: {}'.format(x))
         print('y: {}'.format(y))
         print('z: {}'.format(z))
         print('m: {}'.format(m))
-        print('sillas: {}'.format(parameters[0]))
-        print('mesas: {}'.format(parameters[1]))
-        print('ollas: {}'.format(parameters[2]))
-        print('sartenes: {}'.format(parameters[3]))
-
-
-
+        print('Chairs: {}'.format(parameters[0]))
+        print('Tables: {}'.format(parameters[1]))
+        print('Pots: {}'.format(parameters[2]))
+        print('Pans: {}'.format(parameters[3]))

@@ -1,5 +1,6 @@
 import numpy as np
 import math
+import json
 from random import random
 from problem import Objective
 
@@ -33,7 +34,7 @@ class Particle():
         self.x[self.x < lower_bound] = lower_bound
 
 class Swarm():
-    def __init__(self, objective_function, dimension, number_particles, c1, c2, w_min, w_max, lower_bound, upper_bound, max_velocity, iterations):
+    def __init__(self, objective_function, dimension, lower_bound, upper_bound, number_particles, c1, c2, w_min, w_max, max_velocity, iterations):
         # Initialize the starting global best point
         self.global_best = Point(np.random.rand(dimension, 1), -math.inf)
 
@@ -41,16 +42,16 @@ class Swarm():
         self.objective_function = objective_function
         
         # Initialize the Swarm's parameters
-        self.iterations = iterations
+        self.lower_bound = lower_bound
+        self.upper_bound = upper_bound
         self.number_particles = number_particles
         self.c1 = c1
         self.c2 = c2
         self.w_min = w_min
         self.w_max = w_max
-        self.w = w_max
-        self.lower_bound = lower_bound
-        self.upper_bound = upper_bound
         self.max_velocity = max_velocity
+        self.iterations = iterations
+        self.w = w_max
 
         # Initialize particles
         self.particles = np.array([])
@@ -86,38 +87,25 @@ class Swarm():
             self.particles[i].cap_x(self.lower_bound, self.upper_bound)
 
 
-# Declare parameters
-dimension = 4
-number_particles = 500
-c1 = 1
-c2 = 1
-w_min = 0.2
-w_max = 0.9
-lower_bound = 0
-upper_bound = 7500
-iterations = 5000
-max_velocity = 10
+if __name__ == '__main__':
+    with open('problem_config.json') as config_file:
+        problem_config = json.load(config_file)
+    
+    with open('pso_config.json') as config_file:
+        pso_config = json.load(config_file)
 
-# Problem parameters
-x = 1000
-y = 1000
-z = 1000
-m = 1000
+    # Initialize classes
+    objective_function = Objective(problem_config['x'], problem_config['y'], problem_config['z'], problem_config['m'], 
+                                    problem_config['p'], problem_config['alpha'], problem_config['beta'])
 
-p = 1000
-alpha = 10
-beta = 1
+    swarm = Swarm(objective_function, problem_config['dimension'], problem_config['lower_bound'], problem_config['upper_bound'], 
+                    pso_config['number_particles'], pso_config['c1'], pso_config['c2'], pso_config['w_min'], pso_config['w_max'], 
+                    pso_config['max_velocity'], pso_config['iterations'])
 
-# Initialize classes
-objective_function = Objective(x, y, z, m, p, alpha, beta)
-swarm = Swarm(objective_function, dimension, number_particles, c1, c2, w_min, w_max, lower_bound, upper_bound, max_velocity, iterations)
-
-# Main loop
-for k in range(iterations):
-    swarm.calculate_objective()
-    swarm.update_inertia(k)
-    swarm.update_position()
-    # print(swarm.global_best.x)
-    # print(swarm.global_best.value)
-    objective_function.print_values(swarm.global_best.x)
-    print()
+    # Main loop
+    for k in range(pso_config['iterations']):
+        swarm.calculate_objective()
+        swarm.update_inertia(k)
+        swarm.update_position()
+        objective_function.print_values(swarm.global_best.x)
+        print()
