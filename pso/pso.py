@@ -4,7 +4,7 @@ from random import random
 
 class Objective():    
     def calculate(self, x):
-        return np.sum(np.square(x))
+        return 10 * x.shape[0] + np.sum(np.square(x) - x.shape[0] * np.cos(2*math.pi*x))
 
 class Point():
     def __init__(self, x, value):
@@ -90,16 +90,16 @@ class Swarm():
 
 
 # Declare parameters
-dimension = 10
-number_particles = 50
-c1 = 1
+dimension = 100
+number_particles = 500
+c1 = 2
 c2 = 2
-w_min = 0.2
+w_min = 0.1
 w_max = 0.9
 lower_bound = -10
 upper_bound = 10
 iterations = 5000
-max_velocity = 0.1
+max_velocity = 10
 
 # Initialize classes
 objective_function = Objective()

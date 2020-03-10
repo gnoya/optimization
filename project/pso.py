@@ -100,9 +100,10 @@ max_velocity = 10
 
 # Problem parameters
 x = 1000
-y = 5000
+y = 1000
 z = 1000
-m = 4000
+m = 1000
+
 p = 1000
 alpha = 10
 beta = 1
