@@ -4,15 +4,17 @@ import json
 from random import random
 from problem import Objective
 
-class Point():
+
+class Point:
     def __init__(self, x, value):
         # Parameters of this points
         self.x = x
-        
+
         # Value of the objective function for these parameters
         self.value = value
 
-class Particle():
+
+class Particle:
     def __init__(self, dimension):
         # Parameters of this particle
         self.x = np.random.rand(dimension, 1)
@@ -33,14 +35,28 @@ class Particle():
         self.x[self.x > upper_bound] = upper_bound
         self.x[self.x < lower_bound] = lower_bound
 
-class Swarm():
-    def __init__(self, objective_function, dimension, lower_bound, upper_bound, number_particles, c1, c2, w_min, w_max, max_velocity, iterations):
+
+class Swarm:
+    def __init__(
+        self,
+        objective_function,
+        dimension,
+        lower_bound,
+        upper_bound,
+        number_particles,
+        c1,
+        c2,
+        w_min,
+        w_max,
+        max_velocity,
+        iterations,
+    ):
         # Initialize the starting global best point
         self.global_best = Point(np.random.rand(dimension, 1), -math.inf)
 
         # Initialize the objective function
         self.objective_function = objective_function
-        
+
         # Initialize the Swarm's parameters
         self.lower_bound = lower_bound
         self.upper_bound = upper_bound
@@ -62,12 +78,16 @@ class Swarm():
         # Calculate objective for each particle
         for i in range(self.number_particles):
             # Calculate the objective for given parameters
-            objective, _, _, _, _, _ = self.objective_function.calculate(self.particles[i].x)
-            
+            objective, _, _, _, _, _ = self.objective_function.calculate(
+                self.particles[i].x
+            )
+
             # Check for personal best value update
             if objective > self.particles[i].personal_best.value:
-                self.particles[i].personal_best = Point(self.particles[i].x.copy(), objective)
-            
+                self.particles[i].personal_best = Point(
+                    self.particles[i].x.copy(), objective
+                )
+
             # Check for global best value update
             if objective > self.global_best.value:
                 self.global_best = Point(self.particles[i].x.copy(), objective)
@@ -79,7 +99,18 @@ class Swarm():
     def update_position(self):
         for i in range(self.number_particles):
             # Velocity update
-            self.particles[i].v = self.w * self.particles[i].v.copy() + self.c1 * random() * (self.particles[i].personal_best.x.copy() - self.particles[i].x.copy()) + self.c2 * random() * (self.global_best.x.copy() - self.particles[i].x.copy())
+            self.particles[i].v = (
+                self.w * self.particles[i].v.copy()
+                + self.c1
+                * random()
+                * (
+                    self.particles[i].personal_best.x.copy()
+                    - self.particles[i].x.copy()
+                )
+                + self.c2
+                * random()
+                * (self.global_best.x.copy() - self.particles[i].x.copy())
+            )
             self.particles[i].cap_velocity(self.max_velocity)
 
             # Position update
@@ -87,23 +118,40 @@ class Swarm():
             self.particles[i].cap_x(self.lower_bound, self.upper_bound)
 
 
-if __name__ == '__main__':
-    with open('problem_config.json') as config_file:
+if __name__ == "__main__":
+    with open("problem_config.json") as config_file:
         problem_config = json.load(config_file)
-    
-    with open('pso_config.json') as config_file:
+
+    with open("pso_config.json") as config_file:
         pso_config = json.load(config_file)
 
     # Initialize classes
-    objective_function = Objective(problem_config['x'], problem_config['y'], problem_config['z'], problem_config['m'], 
-                                    problem_config['p'], problem_config['alpha'], problem_config['beta'])
+    objective_function = Objective(
+        problem_config["x"],
+        problem_config["y"],
+        problem_config["z"],
+        problem_config["m"],
+        problem_config["p"],
+        problem_config["alpha"],
+        problem_config["beta"],
+    )
 
-    swarm = Swarm(objective_function, problem_config['dimension'], problem_config['lower_bound'], problem_config['upper_bound'], 
-                    pso_config['number_particles'], pso_config['c1'], pso_config['c2'], pso_config['w_min'], pso_config['w_max'], 
-                    pso_config['max_velocity'], pso_config['iterations'])
+    swarm = Swarm(
+        objective_function,
+        problem_config["dimension"],
+        problem_config["lower_bound"],
+        problem_config["upper_bound"],
+        pso_config["number_particles"],
+        pso_config["c1"],
+        pso_config["c2"],
+        pso_config["w_min"],
+        pso_config["w_max"],
+        pso_config["max_velocity"],
+        pso_config["iterations"],
+    )
 
     # Main loop
-    for k in range(pso_config['iterations']):
+    for k in range(pso_config["iterations"]):
         swarm.calculate_objective()
         swarm.update_inertia(k)
         swarm.update_position()
